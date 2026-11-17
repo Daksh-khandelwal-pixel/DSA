@@ -17,7 +17,6 @@ int pop(){
 
 int main(){
     char postfix[MAX] = "53*4-";
-    char infix[MAX]; 
 
     for(int i = 0;postfix[i] != '\0';i++){
         char op = postfix[i];

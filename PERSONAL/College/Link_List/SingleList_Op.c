@@ -13,6 +13,8 @@ struct Node *head = NULL;
 
 void insertBeg(int value) {
 
+    // You can have the condition for CPU allocation
+    // You can also have the code if this is a first node
     struct Node *newNode = malloc(sizeof(struct Node));
 
     newNode->data = value;

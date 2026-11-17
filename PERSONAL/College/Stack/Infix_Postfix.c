@@ -27,7 +27,7 @@ int precedentCheck(char op) {
 
 int main() {
     // FIXED: Changed to char arrays
-    char infix[MAX] = "A*(B+C)-D"; 
+    char infix[MAX] = "A+B*(C^D-E)^(F+G*H)-I"; 
     char postfix[MAX];
     
     int i = 0; // Index to read infix
