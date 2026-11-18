@@ -3,118 +3,107 @@
 
 struct Node{
     int data;
-    struct Node *next;
     struct Node *prev;
+    struct Node *next;
 };
 
 struct Node *head = NULL;
 
-//insertBeg
-void insertBeg(int value){
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-    if(newNode == NULL) return;
-
+// Helper to create a new node
+struct Node *createNode(int value){
+    struct Node *newNode = (struct Node*)malloc(sizeof(struct Node));
     newNode->data = value;
-    newNode->next = head;
     newNode->prev = NULL;
-
-    if(head != NULL){
-        head->prev = newNode;
-    }
-    head = newNode;
+    newNode->next = NULL;
+    return newNode;
 }
 
-//insertEnd
-void insertEnd(int value){
+// 1. insertBeg
+void insertBeg(int value){
+    struct Node *newNode = createNode(value);
     if(head == NULL){
-        insertBeg(value);
+        head = newNode;
         return;
     }
 
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-    if(newNode == NULL) return;
+    newNode->next = head;
+    head->prev = newNode;
+    head = newNode;
+}
+
+// 2. insertEnd
+void insertEnd(int value){
+    struct Node *newNode = createNode(value);
+    if(head == NULL){
+        head = newNode;
+        return;
+    }
 
     struct Node *temp = head;
     while(temp->next != NULL){
         temp = temp->next;
     }
 
-    newNode->data = value;
-    newNode->next = NULL;
-    newNode->prev = temp;
     temp->next = newNode;
+    newNode->prev = temp;
 }
 
-//insertMid
+// 3. insertMid
 void insertMid(int value, int pos){
     if(pos == 1){
         insertBeg(value);
         return;
     }
 
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-    if(newNode == NULL) return;
-
+    struct Node *newNode = createNode(value);
     struct Node *temp = head;
     int i = 1;
     while(i < pos - 1 && temp != NULL){
         temp = temp->next;
         i++;
     }
-    if(temp == NULL) return;
 
-    newNode->data = value;
     newNode->next = temp->next;
     newNode->prev = temp;
-
     if(temp->next != NULL){
         temp->next->prev = newNode;
     }
     temp->next = newNode;
 }
 
-//delBeg
+// 4. delBeg
 void delBeg(){
-    if(head == NULL){
-        printf("Empty\n");
-        return;
-    }
+    if(head == NULL) return;
 
-    struct Node *temp = head;
+    struct Node *delNode = head;
     head = head->next;
-
     if(head != NULL){
         head->prev = NULL;
     }
-    free(temp);
+    free(delNode);
 }
 
-//delEnd
+// 5. delEnd
 void delEnd(){
-    if(head == NULL){
-        printf("Empty\n");
-        return;
-    }
+    if(head == NULL) return;
     if(head->next == NULL){
-        delBeg();
+        free(head);
+        head = NULL;
         return;
     }
 
     struct Node *temp = head;
-    while(temp->next->next != NULL){
+    while(temp->next != NULL){
         temp = temp->next;
     }
 
-    free(temp->next);
-    temp->next = NULL;
+    temp->prev->next = NULL;
+    free(temp);
 }
 
-//delMid
+// 6. delMid
 void delMid(int pos){
-    if(head == NULL){
-        printf("Empty\n");
-        return;
-    }
+    if(head == NULL) return;
     if(pos == 1){
         delBeg();
         return;
@@ -126,18 +115,16 @@ void delMid(int pos){
         temp = temp->next;
         i++;
     }
-    if(temp == NULL || temp->next == NULL) return;
 
     struct Node *delNode = temp->next;
     temp->next = delNode->next;
-
     if(delNode->next != NULL){
         delNode->next->prev = temp;
     }
     free(delNode);
 }
 
-//display
+// 7. display
 void display(){
     struct Node *temp = head;
     while(temp != NULL){
@@ -148,12 +135,16 @@ void display(){
 }
 
 int main(){
+    insertBeg(20);
     insertBeg(10);
-    insertEnd(30);
-    insertMid(20, 2);
-    display(); // 10 <-> 20 <-> 30 <-> NULL
+    insertEnd(40);
+    insertMid(30, 3);
+    display(); // 10 <-> 20 <-> 30 <-> 40 <-> NULL
 
     delMid(2);
-    display(); // 10 <-> 30 <-> NULL
+    delBeg();
+    delEnd();
+    display(); // 30 <-> NULL
+
     return 0;
 }

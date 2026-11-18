@@ -8,23 +8,29 @@ struct Node {
 
 struct Node *head = NULL;
 
-// 1. Insert at Beginning
-void insertBeg(int value) {
+// Helper to create a new node
+struct Node *createNode(int value) {
     struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
-    if (newNode == NULL) return;
+    if (newNode == NULL) return NULL;
 
     newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// 1. Insert at Beginning
+void insertBeg(int value) {
+    struct Node *newNode = createNode(value);
+    if (newNode == NULL) return;
+
     newNode->next = head;
     head = newNode;
 }
 
 // 2. Insert at End
 void insertEnd(int value) {
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    struct Node *newNode = createNode(value);
     if (newNode == NULL) return;
-
-    newNode->data = value;
-    newNode->next = NULL;
 
     if (head == NULL) {
         head = newNode;
@@ -45,7 +51,7 @@ void insertMid(int value, int pos) {
         return;
     }
 
-    struct Node *newNode = (struct Node *)malloc(sizeof(struct Node));
+    struct Node *newNode = createNode(value);
     if (newNode == NULL) return;
 
     struct Node *temp = head;
@@ -61,7 +67,6 @@ void insertMid(int value, int pos) {
         return;
     }
 
-    newNode->data = value;
     newNode->next = temp->next;
     temp->next = newNode;
 }
